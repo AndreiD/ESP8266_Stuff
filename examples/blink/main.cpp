@@ -16,7 +16,7 @@ void blink(){
 
 
 void loop() {
+        Serial.println("~~~ working ~~~");
         blink();
-        Serial.println("Led is " + String(ledState));
         delay(500);
 }
