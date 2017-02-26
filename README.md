@@ -4,12 +4,15 @@ Some things better stay in GitHub so they don't get lost.
 
 Helper code pieces for nodemcu esp8266 projects
 
+##### This is my personal collection gathered from examples on the internet. All code belongs to the ones
+that wrote it. I just modified it as I thought was better, code style*ed where it wasn't.
+
 :alien:
 
 ### How to
 
 This project(s) uses PlatformIO. http://platformio.org/
-add
+
 #### License
 
 DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
