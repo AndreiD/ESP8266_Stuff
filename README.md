@@ -1,16 +1,10 @@
-# ESP8266_Stuff
+# ESP8266 Stuff  that :alien: use
 
-Some things better stay in GitHub so they don't get lost.
+This is top secret stuff stolen from a fucking crash site in Siberia.
 
-Helper code pieces for nodemcu esp8266 projects
+Seems :alien: use esp8266 for their cruz control systems. Here's all the code. No need to thank me
 
 <img src="https://github.com/AndreiD/ESP8266_Stuff/blob/master/other/readme_image0.jpg?raw=true" alt="ESP8266 projects">
-
-
-##### This is my personal collection gathered from examples on the internet. All code belongs to the ones
-that wrote it. I just modified it as I thought was better, code style*ed where it wasn't.
-
-:alien:
 
 ### How to
 
