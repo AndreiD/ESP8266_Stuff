@@ -8,7 +8,7 @@ Helper code pieces for nodemcu esp8266 projects
 
 ### How to
 
-This project(s) uses PlatformIO.
+This project(s) uses PlatformIO. http://platformio.org/
 
 #### License
 
