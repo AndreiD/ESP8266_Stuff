@@ -16,7 +16,10 @@ void tick()
 }
 
 //gets called when WiFiManager enters configuration mode
+
 void configModeCallback (WiFiManager *myWiFiManager) {
+
+        //TODO: you might want to comment all the Serial.println...
         Serial.println("Entered config mode");
         Serial.println(WiFi.softAPIP());
         //if you used auto generated SSID, print it
@@ -38,6 +41,8 @@ void setup() {
         //Local intialization. Once its business is done, there is no need to keep it around
         WiFiManager wifiManager;
         //reset settings - for testing
+
+        //TODO: comment me
         wifiManager.resetSettings();
 
         //set callback that gets called when connecting to previous WiFi fails, and enters Access Point mode

@@ -1,26 +1,17 @@
 #include <Arduino.h>
-#include <SSD1306.h>
-#include <robotofont.h>
 #include <ESP8266WiFi.h>
 
 boolean ledState = false;
 
 
 
-SSD1306 display(0x3c, D5, D6);
 
 void setup() {
         Serial.begin(115200);
-        display.init();
-        display.displayOn();
-        display.flipScreenVertically();
-        display.setFont(Roboto_Medium_24);
         pinMode(LED_BUILTIN, OUTPUT);
-
         WiFi.mode(WIFI_STA);
         WiFi.disconnect();
         delay(100);
-
         Serial.println("Setup done");
 
 }
@@ -33,11 +24,6 @@ void blink(){
 
 void loop() {
         delay(1000);
-        display.drawString(0, 0, "CO2 2234\nVOC 1234");
-        display.display();
-        Serial.println("~~~ working ~~~");
-        blink();
-
         Serial.println("scan start");
 
         // WiFi.scanNetworks will return the number of networks found
