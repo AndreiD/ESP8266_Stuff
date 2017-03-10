@@ -1,27 +1,19 @@
-#include <SSD1306.h>
-#include <robotofont.h>
+//connect D1 - SCL | D2 - SDA
+
 #include <Wire.h>
 #include <Arduino.h>
 
-SSD1306 display(0x3c, D1, D2);
-
-
-void init_oled(){
-        display.init();
-        display.displayOn();
-        display.flipScreenVertically();
-        display.setFont(Roboto_Medium_24);
-}
-
 void setup() {
-        // put your setup code here, to run once:
-        Serial.begin(115200);
+        Serial.begin (115200);
 
+        // Leonardo: wait for serial port to connect
+        while (!Serial)
+        {
+        }
 
-        init_oled();
+        Serial.println ();
 
-
-}
+}  // end of setup
 
 void loop() {
         Serial.println ("I2C scanner. Scanning ...");
@@ -42,9 +34,9 @@ void loop() {
                         delay (1); // maybe unneeded?
                 } // end of good response
         } // end of for loop
-
+        Serial.println ("Done.");
+        Serial.print ("Found ");
         Serial.print (count, DEC);
         Serial.println (" device(s).");
-        delay(2500);
-
+        delay(2000);
 }
