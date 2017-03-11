@@ -2,8 +2,15 @@
 #include <robotofont.h>
 #include <Wire.h>
 #include <Arduino.h>
+#include <CCS811.h>
 
-SSD1306 display(0x3c, D1, D2);
+SSD1306 display(0x3c, D5, D6);
+
+#define ADDR_CCS811      0x5A
+#define WAKE_PIN  4
+CCS811 sensor;
+unsigned int TVOC = 0;
+unsigned int CO2 = 0;
 
 
 void init_oled(){
@@ -19,32 +26,39 @@ void setup() {
 
 
         init_oled();
+        display.clear();
+        display.drawString(0, 0, "Hello\nWorld!");
+        display.display();
 
-
+        //air quality sensor setup
+        if(!sensor.begin(uint8_t(ADDR_CCS811), uint8_t(WAKE_PIN))) {
+                Serial.println("Initialization failed.");
+        }
 }
 
 void loop() {
-        Serial.println ("I2C scanner. Scanning ...");
-        byte count = 0;
+        delay(1000);
 
-        Wire.begin();
-        for (byte i = 8; i < 120; i++)
-        {
-                Wire.beginTransmission (i);
-                if (Wire.endTransmission () == 0)
-                {
-                        Serial.print ("Found address: ");
-                        Serial.print (i, DEC);
-                        Serial.print (" (0x");
-                        Serial.print (i, HEX);
-                        Serial.println (")");
-                        count++;
-                        delay (1); // maybe unneeded?
-                } // end of good response
-        } // end of for loop
+        sensor.getData();
+        CO2 = sensor.readCO2();
+        TVOC = sensor.readTVOC();
 
-        Serial.print (count, DEC);
-        Serial.println (" device(s).");
-        delay(2500);
+        Serial.println("CO2 " + String(CO2));
+        Serial.println("TVOC " + String(TVOC));
+
+        display.clear();
+        display.drawString(0, 0, "CO2 "+String(CO2)+"\nVOC "+String(TVOC));
+        display.display();
+
+
+        if ((CO2 > 8192) || (TVOC > 1187)) {
+                Serial.println("outside normal values #1");
+                return;
+        }
+
+        if (CO2 < 10) {
+                Serial.println("C02 is < 10");
+                return;
+        }
 
 }
