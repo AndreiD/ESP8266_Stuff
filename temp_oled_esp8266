@@ -1,0 +1,118 @@
+#include <Arduino.h>
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BMP280.h>
+#include <Adafruit_AHTX0.h>
+#include <SPI.h>
+#include <Wire.h>
+#include <Adafruit_GFX.h>
+#include <Adafruit_SSD1306.h>
+// #include <Fonts/Org_01.h>
+
+Adafruit_AHTX0 aht;
+#define SEALEVELPRESSURE_HPA (1013.25)
+
+Adafruit_BMP280 bmp;
+
+#define SCREEN_WIDTH 128
+#define SCREEN_HEIGHT 32
+
+#define OLED_RESET -1       // Reset pin # (or -1 if sharing Arduino reset pin)
+#define SCREEN_ADDRESS 0x3C ///< See datasheet for Address; 0x3D for 128x64, 0x3C for 128x32
+
+Adafruit_SSD1306 display(SCREEN_WIDTH, SCREEN_HEIGHT, &Wire, -1);
+
+float dewPoint;
+
+double dewPointFast(double celsius, double humidity);
+
+void setup()
+{
+  Serial.begin(115200);
+  if (!bmp.begin())
+  {
+    Serial.println("Could not find a valid BMP280, check wiring!");
+  }
+  if (!aht.begin())
+  {
+    Serial.println("Could not find AHT? Check wiring");
+  }
+
+  if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS))
+  {
+    Serial.println(F("display allocation failed"));
+    for (;;)
+      ;
+  }
+
+  Serial.println("AHT10/AHT20 Found!");
+  Adafruit_Sensor *aht_humidity, *aht_temp;
+  aht_temp = aht.getTemperatureSensor();
+  aht_temp->printSensorDetails();
+
+  aht_humidity = aht.getHumiditySensor();
+  aht_humidity->printSensorDetails();
+
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 0);
+  // display.setFont(&Org_01);
+  display.clearDisplay();
+}
+
+void loop()
+{
+
+  display.setTextSize(1);
+  display.setTextColor(SSD1306_WHITE);
+  display.setCursor(0, 0);
+  // display.setFont(&Org_01);
+  display.clearDisplay();
+
+  sensors_event_t humidity, temp;
+  aht.getEvent(&humidity, &temp); // populate temp and humidity objects with fresh data
+  aht.getEvent(&humidity, &temp); // populate temp and humidity objects with fresh data
+
+  // serial print
+  Serial.print("Temperature (ATH): ");
+  Serial.print(temp.temperature);
+  Serial.println(" degrees C");
+  Serial.print("Pressure: ");
+  Serial.print(bmp.readPressure() / 100.0F);
+  Serial.println(" hPa");
+  Serial.print("Humidity: ");
+  Serial.print(humidity.relative_humidity);
+  Serial.println("% rH");
+  Serial.print("Dew Point: ");
+  dewPoint = dewPointFast(temp.temperature, humidity.relative_humidity);
+  Serial.println(dewPoint);
+  Serial.println();
+
+  // display print
+  display.print(temp.temperature);
+  display.print(" C - ");
+  display.print(humidity.relative_humidity);
+  display.println(" %");
+
+  display.print("Pressure: ");
+  display.print(bmp.readPressure() / 100.0F);
+  display.println(" hPa");
+
+  display.println();
+  display.print("Dew: ");
+  display.print(dewPoint, 2);
+  display.println(" C");
+
+  display.display();
+
+  delay(1000);
+}
+
+double dewPointFast(double celsius, double humidity)
+{
+  double a = 17.271;
+  double b = 237.7;
+  double temp = (a * celsius) / (b + celsius) + log(humidity / 100);
+  double Td = (b * temp) / (a - temp);
+  return Td;
+}
